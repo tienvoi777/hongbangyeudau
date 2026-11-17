@@ -1478,15 +1478,17 @@ function backdropTex(BW,BH,ledC,ledW,ledTop){   // kích thước theo mét; led
   return tex(c);
 }
 function ledShowTex(){
-  const c=document.createElement('canvas'); c.width=1024; c.height=420; const g=c.getContext('2d');
-  g.fillStyle='#f39a5c'; g.fillRect(0,0,1024,420);
-  for(let i=0;i<18;i++){const a0=Math.PI+i*Math.PI/18, a1=a0+Math.PI/36; g.fillStyle='rgba(255,246,230,.75)'; g.beginPath(); g.moveTo(512,430); g.arc(512,430,900,a0,a1); g.closePath(); g.fill()}
-  g.fillStyle='#3aa7a8'; g.beginPath(); g.moveTo(0,420); [[0,300],[140,230],[260,320],[420,210],[560,330],[700,240],[860,320],[1024,260],[1024,420]].forEach(([x,y])=>g.lineTo(x,y)); g.fill();
-  g.fillStyle='#2b8c9a'; g.beginPath(); g.moveTo(0,420); [[0,360],[200,320],[380,380],[620,330],[820,380],[1024,340],[1024,420]].forEach(([x,y])=>g.lineTo(x,y)); g.fill();
-  g.textAlign='center'; g.textBaseline='middle'; g.font='900 130px "Be Vietnam Pro",Arial'; g.lineJoin='round';
-  g.lineWidth=18; g.strokeStyle='#ffffff'; g.strokeText('HỒNG BÀNG',512,170); g.fillStyle='#2b9fb0'; g.fillText('HỒNG BÀNG',512,170);
-  let q=5; for(let i=0;i<160;i++){q=(q*16807)%2147483647; const x=q%1024; q=(q*16807)%2147483647; const y=q%420; g.fillStyle=['#ffffff','#fde68a','#f9a8d4'][i%3]; g.fillRect(x,y,4,4)}
-  g.strokeStyle='#1a1d22'; g.lineWidth=14; g.strokeRect(0,0,1024,420); return tex(c);
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 420; const g = c.getContext('2d');
+  const t = tex(c);
+  
+  const img = new Image();
+  img.src = 'sunset.png'; // Nạp ảnh màn hình LED sân khấu
+  img.onload = () => {
+    g.drawImage(img, 0, 0, 1024, 420);
+    t.needsUpdate = true; // Tự động cập nhật chất liệu 3D ngay khi ảnh tải xong
+  };
+  
+  return t;
 }
 
 // ---- sân cầu lông hai bên sân khấu (cách sân khấu một đoạn) và các hàng ghế nhựa trước sân khấu
