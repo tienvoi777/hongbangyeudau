@@ -1721,25 +1721,25 @@ function nameSprite(c){        // bảng tên trên đầu: dòng trên là tên
   g.textAlign='center'; g.textBaseline='middle'; g.lineJoin='round';
   
   let y = parseInt(c.yr, 10);
-  if (y && y < 100) y += (y < 50 ? 2000 : 1900); // Tự động xử lý nếu chỉ gõ 2 chữ số (vd: 13, 15, 17, 18)
+  if (y && y < 100) y += (y < 50 ? 2000 : 1900); // Tự động nhận diện khi gõ 2 chữ số (vd: 11, 17, 20, 01)
   
   let nk = '';
   if (y) {
-    const yStart = String(y).slice(-2); // lấy 2 số cuối năm nhập học
-    if (y >= 2017) {
-      // Từ 2017 trở đi: 2 số cuối năm nhập học + 2 số cuối năm tốt nghiệp (vd: 2017 -> 1720)
-      const yEnd = String(y + 3).slice(-2);
-      nk = `${yStart}${yEnd}`;
+    // Lấy 2 chữ số cuối của năm nhập học và năm tốt nghiệp (luôn giữ 2 chữ số kể cả số 0, vd: '01', '04')
+    const s1 = String(y % 100).padStart(2, '0');
+    const s2 = String((y + 3) % 100).padStart(2, '0');
+    
+    // Kiểm tra nếu 2 năm cùng đầu số (chữ số hàng chục giống nhau): rút gọn thành 3 chữ số
+    if (s1[0] === s2[0]) {
+      nk = s1 + s2[1]; // Vd: '11' + '4' -> '114', '20' + '3' -> '203', '01' + '4' -> '014'
     } else {
-      // Trước 2017: 2 số cuối năm nhập học + 1 số cuối năm tốt nghiệp (vd: 2013 -> 136, 2015 -> 158)
-      const yEnd = String(y + 3).slice(-1);
-      nk = `${yStart}${yEnd}`;
+      nk = s1 + s2;    // Vd: khác đầu số thì giữ đủ 4 chữ số '1720', '1821', '1922'
     }
   }
 
   const name=(c.name||'').trim(), sub=[(c.cls||'').trim().toUpperCase(),nk].filter(Boolean).join(' · ');
   const line=(t,yy,size,col)=>{fit(g,t,480,size,800); g.lineWidth=9; g.strokeStyle='rgba(16,48,52,.92)'; g.strokeText(t,256,yy); g.fillStyle=col; g.fillText(t,256,yy)};
-  if(name&&sub){line(name,52,60,'#ffffff'); line(sub,128,46,'#ffe8a3')} else line(name||sub,88,60,'#ffffff');
+  if(name&&sub){line(name,52,60,'#ffffff'); line(sub,128,46,'#ffffff')} else line(name||sub,88,60,'#ffffff');
   const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(cv),depthTest:false})); s.scale.set(3.6,1.24,1); s.renderOrder=5; return s;
 }
 function makeAvatar(c){        // dựng một nhân vật (dùng cho mình và cho người chơi khác); g.userData: body, legs, arms
