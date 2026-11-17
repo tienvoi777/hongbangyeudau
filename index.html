@@ -28,14 +28,15 @@ input{user-select:text;-webkit-user-select:text}
 #chat{position:fixed;left:12px;bottom:calc(64px + env(safe-area-inset-bottom));width:min(400px,72vw);z-index:9;opacity:.85;transition:opacity .2s;pointer-events:none}
 #chatForm,#chat:focus-within #chatLog{pointer-events:auto}   /* chỉ ô gõ nhận chuột, khung tin nhắn không che các nút */
 #chat:hover,#chat:focus-within{opacity:1}
-#chatLog{max-height:min(190px,28vh);overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+#chatlog{max-height:min(120px,18vh);overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
 #chatLog .cl{background:rgba(18,48,52,.72);color:#fff;padding:4px 9px;border-radius:4px;font-size:14px;line-height:1.35;word-break:break-word}
 #chatLog .cl b{color:#ffe08a;font-weight:700}#chatLog .sys{background:rgba(18,48,52,.5)}#chatLog .sys i{color:#cfe8e6}
 #chatForm{display:flex;gap:6px}#chatIn{flex:1;font:inherit;font-size:15px;padding:8px 10px;border:1px solid #b9c4c4;border-radius:4px;background:rgba(255,255,255,.95)}
 #chatForm button{padding:8px 14px}
 #gbList .e{border-top:1px solid #d9dede;padding:9px 0}#gbList .e b{color:var(--teal)}#gbList .e small{color:#777;margin-left:6px}
 #gbList .e p{margin:4px 0 0;white-space:pre-wrap;word-break:break-word}
-.touch #chat{bottom:calc(200px + env(safe-area-inset-bottom));width:min(320px,60vw)}
+.touch #chat{bottom:calc(185px + env(safe-area-inset-bottom));width:min(240px,52vw)}
+.touch #chatlog .cl{font-size:12px;padding:3px 7px;line-height:1.25}
 #bRun{position:fixed;right:calc(24px + env(safe-area-inset-right));bottom:calc(40px + env(safe-area-inset-bottom));width:72px;height:72px;border-radius:50%;padding:0;z-index:12;touch-action:none;background:rgba(200,55,45,.9);border:2px solid #fff}
 .screen{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(18,48,52,.82);backdrop-filter:blur(6px)}
 .card{background:var(--paper);max-width:520px;width:100%;padding:32px;border-radius:6px;max-height:92vh;overflow:auto}
