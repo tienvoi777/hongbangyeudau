@@ -577,12 +577,12 @@ function gateSignTex(){
   const c=document.createElement('canvas'); c.width=1024; c.height=328; const g=c.getContext('2d');
   g.fillStyle='#1f5a86'; g.fillRect(0,0,1024,214);
   g.fillStyle='#e8e2d0'; g.fillRect(30,64,92,92); g.fillStyle='#d9a441'; g.fillRect(44,78,64,64);
-  g.textAlign='left'; g.fillStyle='#cfd8dc'; g.font='500 17px "Be Vietnam Pro",Arial';
-  g.fillText('UBND THÀNH PHỐ HẢI PHÒNG',20,24); g.fillText('SỞ GIÁO DỤC & ĐÀO TẠO',20,46);
-  g.textAlign='center'; g.fillStyle='#d8d4c0'; g.font='600 32px "Be Vietnam Pro",Arial'; g.fillText('TRƯỜNG TRUNG HỌC PHỔ THÔNG',590,50);
-  g.fillStyle='#d9a441'; g.font='800 112px "Be Vietnam Pro",Arial'; g.fillText('HỒNG BÀNG',590,148);
-  g.textAlign='left'; g.fillStyle='#e8e2d0'; g.font='500 24px "Be Vietnam Pro",Arial'; g.fillText('ĐC: 991 ĐẠI LỘ TÔN ĐỨC THẮNG - HỒNG BÀNG - HP',30,198);
-  g.textAlign='right'; g.fillText('ĐT: 031.3749 665',1000,198);
+  g.textAlign='left'; g.fillStyle='#cfd8dc'; g.font='500 16px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif';
+  g.fillText('UBND THÀNH PHỐ HẢI PHÒNG',20,22); g.fillText('SỞ GIÁO DỤC & ĐÀO TẠO',20,44);
+  g.textAlign='center'; g.fillStyle='#fd8d4c'; g.font='600 26px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; g.fillText('TRƯỜNG TRUNG HỌC PHỔ THÔNG',590,42);
+  g.fillStyle='#d9a441'; g.font='800 90px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; g.fillText('HỒNG BÀNG',590,138);
+  g.textAlign='left'; g.fillStyle='#c8c2d0'; g.font='500 22px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; g.fillText('ĐC: 991 ĐẠI LỘ TÔN ĐỨC THẮNG - HỒNG BÀNG - HP',20,198);
+  g.textAlign='right'; g.fillStyle='#c8c2d0'; g.font='500 22px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; g.fillText('ĐT: 031.3749 665',1000,198);
   g.fillStyle='#15191c'; g.fillRect(0,214,1024,114);
   let q=7; for(let i=0;i<150;i++){q=(q*16807)%2147483647; const x=q%1000; q=(q*16807)%2147483647; const y=224+q%90; g.fillStyle=i%3?'#d63a2f':'#3fbf5a'; g.fillRect(x+10,y,8,4)}
   return tex(c);
