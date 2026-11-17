@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>THPT Hồng Bàng – Ký ức 3D</title>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
 <style>
 :root{--teal:#1d6b72;--red:#c8372d;--sky:#cfe3ee;--paper:#fbfaf6;--ink:#1c2a2c}
 *{box-sizing:border-box}
@@ -539,8 +541,11 @@ function plateTex(t){
   g.fillStyle='#ffffff'; g.textAlign='center'; g.textBaseline='middle'; g.font='800 70px "Be Vietnam Pro",Arial'; g.fillText(t,96,60); return tex(c);
 }
 function fit(g,text,max,size,wt){
-  g.font=`${wt} ${size}px "Be Vietnam Pro",Arial`;
-  while(g.measureText(text).width>max&&size>16){size-=2; g.font=`${wt} ${size}px "Be Vietnam Pro",Arial`}
+  g.font=`${wt} ${size}px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif`;
+  while(g.measureText(text).width>max&&size>16){
+    size-=2; 
+    g.font=`${wt} ${size}px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif`;
+  }
 }
 function bannerTex(text,bg,fg){
   const c=document.createElement('canvas'); c.width=1024; c.height=128; const g=c.getContext('2d');
@@ -1711,10 +1716,27 @@ TREES.forEach(([k,px,py])=>{
    ===================================================================== */
 flushInst();
 let avatar=null, legs=[], cfg=null;
-function nameSprite(c){        // bảng tên trên đầu: dòng trên là tên, dòng dưới là lớp · niên khóa
+function nameSprite(c){        // bảng tên trên đầu: dòng trên là tên, dòng dưới là lớp · khóa học
   const cv=document.createElement('canvas'); cv.width=512; cv.height=176; const g=cv.getContext('2d');
   g.textAlign='center'; g.textBaseline='middle'; g.lineJoin='round';
-  const y=parseInt(c.yr,10), nk=y?`${y}–${y+3}`:'';      // niên khóa 3 năm cấp 3
+  
+  let y = parseInt(c.yr, 10);
+  if (y && y < 100) y += (y < 50 ? 2000 : 1900); // Tự động xử lý nếu chỉ gõ 2 chữ số (vd: 13, 15, 17, 18)
+  
+  let nk = '';
+  if (y) {
+    const yStart = String(y).slice(-2); // lấy 2 số cuối năm nhập học
+    if (y >= 2017) {
+      // Từ 2017 trở đi: 2 số cuối năm nhập học + 2 số cuối năm tốt nghiệp (vd: 2017 -> 1720)
+      const yEnd = String(y + 3).slice(-2);
+      nk = `${yStart}${yEnd}`;
+    } else {
+      // Trước 2017: 2 số cuối năm nhập học + 1 số cuối năm tốt nghiệp (vd: 2013 -> 136, 2015 -> 158)
+      const yEnd = String(y + 3).slice(-1);
+      nk = `${yStart}${yEnd}`;
+    }
+  }
+
   const name=(c.name||'').trim(), sub=[(c.cls||'').trim().toUpperCase(),nk].filter(Boolean).join(' · ');
   const line=(t,yy,size,col)=>{fit(g,t,480,size,800); g.lineWidth=9; g.strokeStyle='rgba(16,48,52,.92)'; g.strokeText(t,256,yy); g.fillStyle=col; g.fillText(t,256,yy)};
   if(name&&sub){line(name,52,60,'#ffffff'); line(sub,128,46,'#ffe8a3')} else line(name||sub,88,60,'#ffffff');
@@ -2031,9 +2053,26 @@ document.getElementById('gbOk').onclick=()=>{
 netStatus();
 
 // ---- nhạc loa trường: phát vòng lặp, to hơn khi đứng gần loa, ở đâu trong trường cũng nghe được
-const MUSIC_FILE='nhac-truong.mp3';
-const music=new Audio(MUSIC_FILE); music.loop=true; music.preload='auto'; music.volume=0;
-let musicOn=true, musicOk=true; music.addEventListener('error',()=>{musicOk=false});
+// --- Danh sách nhạc loa trường (tự động chuyển bài khi hết nhạc)
+const PLAYLIST = [
+  'nhac-truong.mp3',
+  'nhac-truong-2.mp3' // Thay/thêm tên file nhạc mới của bạn tại đây
+];
+let currentTrack = 0;
+
+const music = new Audio(PLAYLIST[currentTrack]);
+music.preload = 'auto';
+music.volume = 0;
+
+let musicOn = true, musicOk = true;
+music.addEventListener('error', () => { musicOk = false; });
+
+// Tự động chuyển bài tiếp theo khi hết bài hiện tại
+music.addEventListener('ended', () => {
+  currentTrack = (currentTrack + 1) % PLAYLIST.length; // Chuyển sang bài tiếp theo (xoay vòng)
+  music.src = PLAYLIST[currentTrack];
+  if (musicOn && musicOk) music.play().catch(() => {});
+});
 const SPEAKERS=[];   // vị trí loa (mét)
 { const cx=wx(STAGE.x+STAGE.w/2), zf=wz(STAGE.y), sw=STAGE.w*S, horn=mat(0xdcdcdc), pole=mat(0x6d7377);
   [-1,1].forEach(s=>{const x=cx+s*(sw/2-.6), z=zf+.5; add(new THREE.BoxGeometry(.7,1.2,.6),mat(0x1b1d20),x,.9+.6,z); add(new THREE.CylinderGeometry(.22,.22,.04,16),mat(0x3a3d42),x,1.65,z-.31,false).rotation.x=Math.PI/2; SPEAKERS.push([x,z])});
