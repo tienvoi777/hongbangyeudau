@@ -97,7 +97,7 @@ input[type=text],input[type=number]{width:100%;padding:9px 10px;border:1px solid
     <label for="name">Tên</label>
     <input type="text" id="name" maxlength="24" required placeholder="Ví dụ: Minh Anh">
     <div class="row">
-      <div><label for="cls">Lớp</label><input type="text" id="cls" maxlength="8" placeholder="12A1"></div>
+      <div><label for="cls">Lớp</label> <span style="font-weight:bold;margin-right:2px">X</span><input type="text" id="cls" maxlength="2" placeholder="5" style="width:70px"></div>
       <div><label for="yr">Năm nhập học</label><input type="number" id="yr" min="1960" max="2030" placeholder="2013"></div>
     </div>
     <label for="note">Ghi chú <span id="cnt" style="font-weight:400;color:#777">0/64</span></label>
@@ -574,18 +574,42 @@ function mosaicTex(){
   return tex(c);
 }
 function gateSignTex(){
-  const c=document.createElement('canvas'); c.width=1024; c.height=328; const g=c.getContext('2d');
-  g.fillStyle='#1f5a86'; g.fillRect(0,0,1024,214);
-  g.fillStyle='#e8e2d0'; g.fillRect(30,64,92,92); g.fillStyle='#d9a441'; g.fillRect(44,78,64,64);
-  g.textAlign='left'; g.fillStyle='#cfd8dc'; g.font='500 16px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif';
-  g.fillText('UBND THÀNH PHỐ HẢI PHÒNG',20,22); g.fillText('SỞ GIÁO DỤC & ĐÀO TẠO',20,44);
-  g.textAlign='center'; g.fillStyle='#fd8d4c'; g.font='600 26px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; g.fillText('TRƯỜNG TRUNG HỌC PHỔ THÔNG',590,42);
-  g.fillStyle='#d9a441'; g.font='800 90px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; g.fillText('HỒNG BÀNG',590,138);
-  g.textAlign='left'; g.fillStyle='#c8c2d0'; g.font='500 22px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; g.fillText('ĐC: 991 ĐẠI LỘ TÔN ĐỨC THẮNG - HỒNG BÀNG - HP',20,198);
-  g.textAlign='right'; g.fillStyle='#c8c2d0'; g.font='500 22px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; g.fillText('ĐT: 031.3749 665',1000,198);
-  g.fillStyle='#15191c'; g.fillRect(0,214,1024,114);
-  let q=7; for(let i=0;i<150;i++){q=(q*16807)%2147483647; const x=q%1000; q=(q*16807)%2147483647; const y=224+q%90; g.fillStyle=i%3?'#d63a2f':'#3fbf5a'; g.fillRect(x+10,y,8,4)}
-  return tex(c);
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 328; const g = c.getContext('2d');
+  
+  // 1. Vẽ nền biển hiệu
+  g.fillStyle = '#1f5a86'; g.fillRect(0,0,1024,214);
+  
+  // 2. Tạo Texture Three.js
+  const t = tex(c);
+  
+  // 3. Nạp và vẽ Logo vào ô trống bên trái biển hiệu
+  const img = new Image();
+  img.src = 'logo.jpg'; // Tên file ảnh logo trong thư mục dự án
+  img.onload = () => {
+    // Vẽ logo vào vị trí [x: 40, y: 50] với kích thước [110x110]
+    g.drawImage(img, 40, 50, 110, 110);
+    t.needsUpdate = true; // Cập nhật lại biển hiệu 3D ngay khi ảnh nạp xong
+  };
+
+  // 4. Vẽ văn bản trên biển hiệu
+  g.textAlign = 'left'; g.fillStyle = '#cfd8dc'; g.font = '500 16px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif';
+  g.fillText('UBND THÀNH PHỐ HẢI PHÒNG', 20, 22); 
+  g.fillText('SỞ GIÁO DỤC & ĐÀO TẠO', 20, 44);
+  
+  g.textAlign = 'center'; g.fillStyle = '#fd8d4c'; g.font = '600 26px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; 
+  g.fillText('TRƯỜNG TRUNG HỌC PHỔ THÔNG', 550, 42);
+  
+  g.fillStyle = '#d9a441'; g.font = '800 90px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; 
+  g.fillText('HỒNG BÀNG', 550, 138);
+  
+  g.textAlign = 'left'; g.fillStyle = '#c8c2d0'; g.font = '500 22px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; 
+  g.fillText('ĐC: 991 ĐẠI LỘ TÔN ĐỨC THẮNG - HỒNG BÀNG - HP', 20, 198);
+  
+  g.textAlign = 'right'; g.fillStyle = '#c8c2d0'; g.font = '500 22px "Be Vietnam Pro", "Segoe UI", Roboto, Arial, sans-serif'; 
+  g.fillText('ĐT: 031.3749 665', 1000, 198);
+  
+  g.fillStyle = '#15191c'; g.fillRect(0, 214, 1024, 114);
+  return t;
 }
 function corrTex(){
   const c=document.createElement('canvas'); c.width=64; c.height=16; const g=c.getContext('2d');
@@ -1720,27 +1744,56 @@ function nameSprite(c){        // bảng tên trên đầu: dòng trên là tên
   const cv=document.createElement('canvas'); cv.width=512; cv.height=176; const g=cv.getContext('2d');
   g.textAlign='center'; g.textBaseline='middle'; g.lineJoin='round';
   
-  let y = parseInt(c.yr, 10);
-  if (y && y < 100) y += (y < 50 ? 2000 : 1900); // Tự động nhận diện khi gõ 2 chữ số (vd: 11, 17, 20, 01)
-  
-  let nk = '';
-  if (y) {
-    // Lấy 2 chữ số cuối của năm nhập học và năm tốt nghiệp (luôn giữ 2 chữ số kể cả số 0, vd: '01', '04')
-    const s1 = String(y % 100).padStart(2, '0');
-    const s2 = String((y + 3) % 100).padStart(2, '0');
-    
-    // Kiểm tra nếu 2 năm cùng đầu số (chữ số hàng chục giống nhau): rút gọn thành 3 chữ số
-    if (s1[0] === s2[0]) {
-      nk = s1 + s2[1]; // Vd: '11' + '4' -> '114', '20' + '3' -> '203', '01' + '4' -> '014'
-    } else {
-      nk = s1 + s2;    // Vd: khác đầu số thì giữ đủ 4 chữ số '1720', '1821', '1922'
+  // Chuẩn hóa tên lớp: Tự động gắn chữ X vào trước số (vd: nhập 5 -> ra X5, nhập X5 -> giữ X5)
+  let clsRaw = (c.cls || '').trim().toUpperCase();
+  let clsFormatted = clsRaw;
+  if (clsRaw) {
+    const matches = clsRaw.match(/\d+/g);
+    if (matches) {
+      clsFormatted = 'X' + matches[matches.length - 1]; // Lấy số lớp và gắn X đằng trước
+    } else if (!clsRaw.startsWith('X')) {
+      clsFormatted = 'X' + clsRaw;
     }
   }
 
-  const name=(c.name||'').trim(), sub=[(c.cls||'').trim().toUpperCase(),nk].filter(Boolean).join(' · ');
-  const line=(t,yy,size,col)=>{fit(g,t,480,size,800); g.lineWidth=9; g.strokeStyle='rgba(16,48,52,.92)'; g.strokeText(t,256,yy); g.fillStyle=col; g.fillText(t,256,yy)};
-  if(name&&sub){line(name,52,60,'#ffffff'); line(sub,128,46,'#ffffff')} else line(name||sub,88,60,'#ffffff');
-  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(cv),depthTest:false})); s.scale.set(3.6,1.24,1); s.renderOrder=5; return s;
+  // Xử lý niên khóa
+  let y = parseInt(c.yr, 10);
+  if (y && y < 100) y += (y < 50 ? 2000 : 1900);
+  
+  let nk = '';
+  if (y) {
+    const s1 = String(y % 100).padStart(2, '0');
+    const s2 = String((y + 3) % 100).padStart(2, '0');
+    if (s1[0] === s2[0]) {
+      nk = s1 + s2[1]; // Cùng đầu số -> 3 chữ số (vd: 003, 114, 203)
+    } else {
+      nk = s1 + s2;    // Khác đầu số -> 4 chữ số (vd: 1720, 1821)
+    }
+  }
+
+  const name = (c.name || '').trim();
+  const sub = [clsFormatted, nk].filter(Boolean).join(' · ');
+  
+  const line = (t, yy, size, col) => {
+    fit(g, t, 480, size, 800); 
+    g.lineWidth = 9; 
+    g.strokeStyle = 'rgba(16,48,52,.92)'; 
+    g.strokeText(t, 256, yy); 
+    g.fillStyle = col; 
+    g.fillText(t, 256, yy);
+  };
+  
+  if (name && sub) {
+    line(name, 52, 60, '#ffffff'); 
+    line(sub, 128, 46, '#ffffff');
+  } else {
+    line(name || sub, 88, 60, '#ffffff');
+  }
+  
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex(cv), depthTest: false })); 
+  s.scale.set(3.6, 1.24, 1); 
+  s.renderOrder = 5; 
+  return s;
 }
 function makeAvatar(c){        // dựng một nhân vật (dùng cho mình và cho người chơi khác); g.userData: body, legs, arms
   const g=new THREE.Group(), body=new THREE.Group(); g.add(body);
