@@ -57,7 +57,7 @@ input[type=text],input[type=number]{width:100%;padding:9px 10px;border:1px solid
 #load{position:fixed;inset:0;z-index:30;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;transition:opacity .6s}
 #hud{position:fixed;top:12px;left:12px;right:12px;z-index:10;display:flex;flex-wrap:wrap;gap:8px;align-items:center;pointer-events:none}
 #hud>*{pointer-events:auto}
-#hud .t{background:rgba(251,250,246,.92);padding:8px 14px;border-radius:4px;font-weight:800;color:var(--teal)}
+#hud .t, #hud .L{background:rgba(16,48,52,.85);padding:8px 14px;border-radius:4px;font-weight:800;color:#ffffff}
 #help{position:fixed;bottom:12px;left:12px;z-index:10;background:rgba(251,250,246,.9);padding:8px 12px;border-radius:4px;font-size:13px}
 #labels div{position:fixed;z-index:9;transform:translate(-50%,-50%);background:var(--teal);color:#fff;font-size:12px;font-weight:600;padding:3px 8px;border-radius:3px;pointer-events:none;white-space:nowrap}
 #hint{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);z-index:10;background:var(--teal);color:#fff;padding:8px 16px;border-radius:4px;font-weight:600}
@@ -469,7 +469,7 @@ function tile(kind, wall){
 }
 function signTex(text,color){
   const c=document.createElement('canvas'); c.width=2048; c.height=128; const g=c.getContext('2d');
-  fit(g,text,1960,84,800); g.fillStyle=color||'#c8372d'; g.textAlign='center'; g.textBaseline='middle';
+  fit(g,text,1960,84,800); g.fillStyle=color||'#ffffff'; g.textAlign='center'; g.textBaseline='middle';
   g.fillText(text,1024,68); return tex(c);
 }
 function floorTile(k){
