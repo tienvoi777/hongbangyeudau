@@ -2044,11 +2044,34 @@ const SPEAKERS=[];   // vị trí loa (mét)
     [0,Math.PI].forEach(a=>{const h=add(new THREE.CylinderGeometry(.32,.08,.55,14,1,true),horn,x+Math.sin(a)*.3,top+1.6,z+Math.cos(a)*.3,false); h.rotation.x=Math.PI/2; h.rotation.z=a; h.material.side=THREE.DoubleSide});
     SPEAKERS.push([x,z])}); }
 function startMusic(){if(!musicOn||!musicOk) return; music.play().catch(()=>{})}
-// Tự động bật nhạc ngay khi người dùng click/chạm/gõ phím lần đầu
-const unlockAudio = () => { startMusic(); };
-window.addEventListener('click', unlockAudio, { once: true });
-window.addEventListener('keydown', unlockAudio, { once: true });
-window.addEventListener('touchstart', unlockAudio, { once: true });
+const bgMusic = document.getElementById('bgMusic'); // Giả sử thẻ audio của bạn có id="bgMusic"
+const bMusic = document.getElementById('bMusic');
+
+// 1. Tự động phát nhạc ngay ở lần click chuột hoặc ấn phím đầu tiên trên trang
+const playAudioOnFirstInteraction = () => {
+  if (bgMusic && bgMusic.paused) {
+    bgMusic.play().then(() => {
+      if (bMusic) bMusic.innerText = 'Nhạc: bật';
+    }).catch(err => console.log('Chờ tương tác người dùng để phát nhạc:', err));
+  }
+};
+
+window.addEventListener('click', playAudioOnFirstInteraction, { once: true });
+window.addEventListener('keydown', playAudioOnFirstInteraction, { once: true });
+
+// 2. Xử lý sự kiện cho nút bật / tắt nhạc trên thanh HUD
+if (bMusic && bgMusic) {
+  bMusic.addEventListener('click', (e) => {
+    e.stopPropagation(); // Tránh xung đột với sự kiện click của cửa sổ
+    if (bgMusic.paused) {
+      bgMusic.play();
+      bMusic.innerText = 'Nhạc: bật';
+    } else {
+      bgMusic.pause();
+      bMusic.innerText = 'Nhạc: tắt';
+    }
+  });
+}
 anims.push(dt=>{
   if(!avatar||!musicOn){music.volume=0; return}
   const p=avatar.position; let near=0; SPEAKERS.forEach(([x,z])=>{near=Math.max(near,1-Math.hypot(p.x-x,p.z-z)/45)});
