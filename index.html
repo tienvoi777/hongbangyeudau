@@ -106,16 +106,23 @@ input[type=text],input[type=number]{width:100%;padding:9px 10px;border:1px solid
 
 <div id="hud" hidden>
   <span class="t">THPT Hồng Bàng</span>
-  <button class="ghost" id="bPlan">Mặt bằng</button>
-  <button class="ghost" id="bChar">Đổi nhân vật</button>
-  <button id="bExit" hidden>Ra ngoài</button>
   <span class="t" id="money" title="Tiền tiêu vặt"></span>
-  <button class="ghost" id="bClock" title="Đổi giờ trong game"></button>
-  <button class="ghost" id="bMusic" title="Bật / tắt nhạc loa trường">Nhạc: bật</button>
-  <span class="t" id="netSt" title="">Chơi một mình</span>
-  <button class="ghost" id="bGB" title="Sổ lưu bút">Lưu bút</button>
-  <button class="ghost" id="bWave" title="Vẫy tay (phím 1)">Vẫy tay</button>
-  <button class="ghost" id="bJump" title="Nhảy (phím 2)">Nhảy</button>
+  
+  <!-- Nút ẩn / hiện menu -->
+  <button class="ghost" id="bToggleMenu" title="Thu gọn/Mở rộng">☰</button>
+
+  <!-- Container chứa các nút chức năng -->
+  <div id="hudContent" style="display: inline-flex; gap: 4px; align-items: center;">
+    <button class="ghost" id="bPlan">Mặt bằng</button>
+    <button class="ghost" id="bChar">Đổi nhân vật</button>
+    <button id="bExit" hidden>Ra ngoài</button>
+    <button class="ghost" id="bClock" title="Đổi giờ trong game"></button>
+    <button class="ghost" id="bMusic" title="Bật / tắt nhạc loa trường">Nhạc: bật</button>
+    <span class="t" id="netSt" title="">Chơi một mình</span>
+    <button class="ghost" id="bGB" title="Sổ lưu bút">Lưu bút</button>
+    <button class="ghost" id="bWave" title="Vẫy tay (phím 1)">Vẫy tay</button>
+    <button class="ghost" id="bJump" title="Nhảy (phím 2)">Nhảy</button>
+  </div>
 </div>
 <div id="help" hidden></div>
 <div id="joy" hidden><div id="knob"></div></div>
@@ -2137,6 +2144,20 @@ $('bChar').onclick=()=>{$('chat').hidden=true;$('hud').hidden=true;help.hidden=t
 addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 requestAnimationFrame(frame);
 setTimeout(()=>{const l=$('load');if(l.textContent.startsWith('Đang')){l.style.opacity=0;setTimeout(()=>l.hidden=true,600);$('intro').hidden=false}},900);
+
+  const bToggleMenu = document.getElementById('bToggleMenu');
+  const hudContent = document.getElementById('hudContent');
+
+  if (bToggleMenu && hudContent) {
+    bToggleMenu.addEventListener('click', () => {
+      // Kiểm tra trạng thái ẩn/hiện thực tế của menu
+      const isHidden = window.getComputedStyle(hudContent).display === 'none';
+      
+      hudContent.style.display = isHidden ? 'inline-flex' : 'none';
+      bToggleMenu.innerText = isHidden ? '✖' : '☰';
+    });
+  }
 </script>
+
 </body>
 </html>
