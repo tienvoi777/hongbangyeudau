@@ -1,0 +1,9 @@
+{
+  "name": "hongbang-3d",
+  "version": "1.0.0",
+  "description": "THPT Hồng Bàng – Ký ức 3D: máy chủ nhiều người chơi, chat và lưu bút",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "ws": "^8.18.0" }
+}
