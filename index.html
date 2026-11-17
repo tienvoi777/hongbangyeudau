@@ -2044,6 +2044,11 @@ const SPEAKERS=[];   // vị trí loa (mét)
     [0,Math.PI].forEach(a=>{const h=add(new THREE.CylinderGeometry(.32,.08,.55,14,1,true),horn,x+Math.sin(a)*.3,top+1.6,z+Math.cos(a)*.3,false); h.rotation.x=Math.PI/2; h.rotation.z=a; h.material.side=THREE.DoubleSide});
     SPEAKERS.push([x,z])}); }
 function startMusic(){if(!musicOn||!musicOk) return; music.play().catch(()=>{})}
+// Tự động bật nhạc ngay khi người dùng click/chạm/gõ phím lần đầu
+const unlockAudio = () => { startMusic(); };
+window.addEventListener('click', unlockAudio, { once: true });
+window.addEventListener('keydown', unlockAudio, { once: true });
+window.addEventListener('touchstart', unlockAudio, { once: true });
 anims.push(dt=>{
   if(!avatar||!musicOn){music.volume=0; return}
   const p=avatar.position; let near=0; SPEAKERS.forEach(([x,z])=>{near=Math.max(near,1-Math.hypot(p.x-x,p.z-z)/45)});
